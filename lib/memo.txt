@@ -1,0 +1,4 @@
+■pythonをexe化
+　pip install pyinstaller
+　pyinstaller PythonApp1.py --onefile
+　参考URL：https://biotech-lab.org/articles/9856 
