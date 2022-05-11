@@ -1,0 +1,44 @@
+-----Address info-----
+¡Start : 0x1000
+¡Step  : 0x44000
+¡End   : 0x21ffffff
+
+¡ Partition address ¡
+address 0 : 0x0
+address 1 : 0x220000
+address 2 : 0xaa0000
+address 3 : 0x1ba0000
+address 4 : 0x5fa0000
+address 5 : 0xe7a0000
+address 6 : 0xe9c0000
+address 7 : 0xf240000
+address 8 : 0xfac0000
+address 9 : 0x10bc0000
+
+Title : no title
+File name   : PSN7_No18443_BETA_COPY_PAT000.BIN
+Num address : 0x22000000
+Memo
+
+-----part 0 [ 0x0 ]-----
+err = 0
+-----part 1 [ 0x220000 ]-----
+err = 0
+-----part 2 [ 0xaa0000 ]-----
+err = 0
+-----part 3 [ 0x1ba0000 ]-----
+err = 0
+-----part 4 [ 0x5fa0000 ]-----
+err = 0
+-----part 5 [ 0xe7a0000 ]-----
+err = 0
+-----part 6 [ 0xe9c0000 ]-----
+err = 0
+-----part 7 [ 0xf240000 ]-----
+err = 0
+-----part 8 [ 0xfac0000 ]-----
+err = 0
+-----part 9 [ 0x10bc0000 ]-----
+¦0x19801000 : 0x0, 0x0, 0x0, 0x0...
+¦0x19845000 : 0x0, 0x0, 0x0, 0x0...
+err = 2

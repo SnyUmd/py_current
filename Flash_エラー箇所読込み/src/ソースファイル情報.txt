@@ -1,0 +1,31 @@
+Check_FlashBinary.py　
+★実行スクリプト　
+　　　python Check_FlashBinary.py
+    ※メインソース
+    ボタンクリック動作関数
+    ウインドウ作成
+    ウインドウ表示
+
+Common.py
+    グローバル変数クラス
+    イニシャライズ関数
+    全てのバイナリーチェック関数
+
+BinaryCtrl.py
+　　バイナリ読込み関数
+
+WindowCtrl.py
+　　tkinterでのウインドウ作成関数
+　　メッセージ表示関数
+
+FileCtrl.py
+　　ファイル操作関数
+
+setup.py
+　　スクリプトのexe化
+　　コード内のスクリプトファイル名と、セットアップ名を変更して、下記コマンドを実行
+ 　　　python setup.py build
+
+ 　　※cx_Freeseをインストールしている必要あり
+ 　　　下記インストールコマンド　i-PROネットワークに接続して実行
+ 　　　　python -m pip install cx_Freeze
