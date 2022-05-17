@@ -1,4 +1,7 @@
 # from sklearn import tree
+# 参考
+# https://blog2.k05.biz/2021/09/python-pystray.html
+
 import threading
 import pystray
 from pystray import Icon, Menu, MenuItem
