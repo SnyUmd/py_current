@@ -1,7 +1,7 @@
 # import os
 from PIL import Image
 from numpy import true_divide
-import SysCtrl as SCtrl
+# import SysCtrl as SCtrl
 
 # *****************************************************************
 # Tesseractのインストールが必要
@@ -16,6 +16,7 @@ import SysCtrl as SCtrl
 # 　　「Japanese」と「Japanese(Vertical)」にチェック
 def GetImgText_File(img_file, lang_ = "jpn", tesseract_path_ = "C:\\Program Files\\Tesseract-OCR"):
     import pyocr
+    import SysCtrl as SCtrl
     #インストールしたTesseract-OCRのパスを環境変数「PATH」へ追記する。
     #OS自体に設定してあれば以下の2行は不要
     # path='C:\\Program Files\\Tesseract-OCR'
@@ -51,6 +52,7 @@ def GetImgText_Image(img_, lang_ = "jpn", tesseract_path_ = "C:\\Program Files\\
     # path='C:\\Program Files\\Tesseract-OCR'
     
     import pyocr
+    import SysCtrl as SCtrl
     SCtrl.AddPath(tesseract_path_)
     # os.environ['PATH'] = os.environ['PATH'] + path
     

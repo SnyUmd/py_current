@@ -131,7 +131,7 @@ def thread_main():
                     wCtrl.MsgBox_err('errer', 'not image')
                 else:#イメージだった時、イメージ内のテキストを判定
                     Img_ = iCtrl.GetClipImg()
-
+                    print(Img_)
                     if Img_ == "err":
                         print("err")
                         
