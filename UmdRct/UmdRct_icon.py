@@ -21,12 +21,21 @@ global t_main
 global t_icon
 global icon_
 global sys_sts
+global aryKeys
+global aryMsg
 # global Loop_icon
 
 ActionSts = 0
-pressCnt = [0, 0, 0]
+pressCnt = [0, 0, 0, 0, 0]
 Loop_Main = True
 sys_sts = True
+aryKeys = ["]", "\\", "[", "h", "esc"]
+
+aryMsg = ["[win] + [ctrl] + %s  =  クリップボードの画像からテキストを抽出" % aryKeys[0],
+           "[win] + [ctrl] + %s  =  クリップボードの英語を翻訳" % aryKeys[1],
+           "[win] + [ctrl] + %s  =  選択画像内のテキストを抽出(ウインドウ)" % aryKeys[2],
+           "[win] + [ctrl] + %s  =  ヘルプ" % aryKeys[3],
+           "[win] + [ctrl] + %s  =  終了" % aryKeys[4]]
 
 # # *******************************************************************************
 # def ClickFile():
@@ -39,7 +48,32 @@ sys_sts = True
 #     # WCtrl.MsgBox_Inf(mess_=text_, title_="")
 
 # *******************************************************************************
-def thread_end():
+def resetSts():
+    global pressCnt
+    global ActionSts
+    for i in range(len(pressCnt)):
+        pressCnt[i] = 0
+        
+    ActionSts = 0
+    # print(pressCnt)
+
+# *******************************************************************************
+def displayHelp():
+    global aryMsg
+    # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
+    # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
+    
+    msg_str = ""
+    loop_num = len(aryMsg)
+    
+    for i in range(loop_num):
+        msg_str += aryMsg[i]
+        msg_str += "\r\n" if not i >= loop_num else ""
+        
+    print(msg_str)
+    wCtrl.MsgBox_Inf('help', msg_str)
+# *******************************************************************************
+def quit_system():
     global Loop_Main
     global t_main
     global icon_
@@ -72,7 +106,7 @@ def thread_task_icon():
     #-----------------------
     # メニュー
     #-----------------------
-    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'Quit': lambda: thread_end()}
+    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'Quit': lambda: quit_system()}
         
     items = []
     for option, callback in options_map.items():
@@ -95,35 +129,57 @@ def thread_main():
     global ActionSts
     global Loop_Main
     global sys_sts
+    global aryKeys
 
     print('main start')
+    displayHelp()
+    # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
+    # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
+
     while sys_sts:
          if Loop_Main:   
             # =================================================================
             if ActionSts == 0:
-                if kCtrl.CheckPress_CS("["):
+                # クリップボードの画像からテキストを抽出
+                if kCtrl.CheckPress_CS(aryKeys[0]):
                     pressCnt[0] += 1
                     if pressCnt[0] > 150:
                         if ActionSts == 0: ActionSts = 1
                 else: 
                     pressCnt[0] = 0
-
-                if kCtrl.CheckPress_CS("\\"):
+                # クリップボードの英語を日本語に翻訳
+                if kCtrl.CheckPress_CS(aryKeys[1]):
                     pressCnt[1] += 1
                     if pressCnt[1] > 150:
                         if ActionSts == 0: ActionSts = 2
                 else: 
                     pressCnt[1] = 0
                 
-                if kCtrl.CheckPress_CS("]"):
+                # 選択画像内のテキストを抽出（ウインドウ）
+                if kCtrl.CheckPress_CS(aryKeys[2]):
                     pressCnt[2] += 1
                     if pressCnt[2] > 150:
                         if ActionSts == 0: ActionSts = 3
                 else: 
                     pressCnt[2] = 0
-
+                # ヘルプ  
+                if kCtrl.CheckPress_CS(aryKeys[3]):
+                    pressCnt[3] += 1
+                    if pressCnt[3] > 150:
+                        if ActionSts == 0: ActionSts = 4
+                else: 
+                    pressCnt[3] = 0
+                    
+                # 終了  
+                if kCtrl.CheckPress_CS(aryKeys[4]):
+                    pressCnt[4] += 1
+                    if pressCnt[4] > 150:
+                        if ActionSts == 0: ActionSts = 5
+                else: 
+                    pressCnt[4] = 0
 
             # =================================================================
+            # クリップボードのイメージからテキストを抽出
             elif ActionSts == 1:
                 isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
                 print(isImage)
@@ -145,11 +201,13 @@ def thread_main():
                         
                         wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
                 print('1 End')
-                pressCnt = [0, 0, 0]
-                ActionSts = 0
+                resetSts()
+                # pressCnt = [0, 0, 0, 0]
+                # ActionSts = 0
 
 
             # =================================================================
+            # クリップボードの英語を日本語に翻訳
             elif ActionSts == 2:
                 isStr = sCtrl.CheckClipBoad_Str()#クリップボードがテキストであるか確認
                 print(isStr)
@@ -161,10 +219,12 @@ def thread_main():
                     cStr = sCtrl.getClipBoad_str()
                     Translation.GetTR(cStr)
                 print('2 End')
-                pressCnt = [0, 0, 0]
-                ActionSts = 0
+                resetSts()
+                # pressCnt = [0, 0, 0, 0]
+                # ActionSts = 0
             
             # =================================================================
+            # 選択画像内のテキストを抽出（ウインドウ）
             elif ActionSts == 3:
                 import tkinter as tk0
                 
@@ -199,10 +259,24 @@ def thread_main():
 
                 wCtrl.WindowLoopStart(tk0)
                 print('3 End')
-                pressCnt = [0, 0, 0]
-                ActionSts = 0
+                resetSts()
+                # pressCnt = [0, 0, 0, 0]
+                # ActionSts = 0
 
-
+            elif ActionSts == 4:
+                displayHelp()
+                # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
+                print('4 End')
+                resetSts()
+                # pressCnt = [0, 0, 0, 0]
+                # ActionSts = 0
+                
+            # =================================================================
+            # 終了
+            elif ActionSts == 5:
+                resetSts()
+                quit_system()
+                
 # ***********************************************************************************************************************
 # ***********************************************************************************************************************
 # ***********************************************************************************************************************

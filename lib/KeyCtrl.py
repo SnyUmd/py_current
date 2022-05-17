@@ -25,7 +25,8 @@ import keyboard
 
 # *****************************************************************
 def CheckPress_CS(key_):
-    keys = ["shift", "ctrl", key_]
+    # keys = ["shift", "ctrl", key_]
+    keys = ["win", "ctrl", key_]
     return True if keyboard.is_pressed(keys[2]) and keyboard.is_pressed(keys[0]) and keyboard.is_pressed(keys[1]) else False
 
 
@@ -39,7 +40,7 @@ def Loop_CheckPress_CS(key_, time_out_sec = 0):
     time_now = 0
     LoopCnt = 0
 
-    keys = ["shift", "ctrl", key_]
+    keys = ["win", "ctrl", key_]
 
     time_start = sCtrl.GetPrcsTime()
     time_current = sCtrl.GetPrcsTime()
