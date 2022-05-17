@@ -46,6 +46,7 @@ def GetImgText_File(img_file, lang_ = "jpn", tesseract_path_ = "C:\\Program File
 # 　
 # 　■Additional language data(download)を設定
 # 　　「Japanese」と「Japanese(Vertical)」にチェック
+
 def GetImgText_Image(img_, lang_ = "jpn", tesseract_path_ = "C:\\Program Files\\Tesseract-OCR"):
     #インストールしたTesseract-OCRのパスを環境変数「PATH」へ追記する。
     #OS自体に設定してあれば以下の2行は不要
@@ -53,13 +54,13 @@ def GetImgText_Image(img_, lang_ = "jpn", tesseract_path_ = "C:\\Program Files\\
     
     import pyocr
     import SysCtrl as SCtrl
+
     SCtrl.AddPath(tesseract_path_)
+
     # os.environ['PATH'] = os.environ['PATH'] + path
-    
     #pyocrへ利用するOCRエンジンをTesseractに指定する。
     tools = pyocr.get_available_tools()
     tool = tools[0]
-
     
     #画像から文字を読み込む
     builder = pyocr.builders.TextBuilder(tesseract_layout=6)

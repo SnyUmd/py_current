@@ -7,7 +7,7 @@ import KeyCtrl as kCtrl
 while True:
     print('start')
     if kCtrl.Loop_CheckPress_CS('\\', 0):
-        isImage = iCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
+        isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
         print(isImage)
         if not isImage:#イメージでは無いとき
             wCtrl.MsgBox_err('errer', 'not image')
