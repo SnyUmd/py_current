@@ -1,5 +1,6 @@
 # import os
 from PIL import Image
+from numpy import true_divide
 import SysCtrl as SCtrl
 
 # *****************************************************************
@@ -64,18 +65,8 @@ def GetImgText_Image(img_, lang_ = "jpn", tesseract_path_ = "C:\\Program Files\\
     return result_text
 
 # *****************************************************************
-def CheckClipBoad_Img():
-    from PIL import ImageGrab, Image
-    # クリップボード内の情報を取得する
-    clipboard_image = ImageGrab.grabclipboard()
-    # clioboard_imageがImage.Image型の場合は保存する
-    if isinstance(clipboard_image, Image.Image):
-        return True
-    else:
-        return False
-
-# *****************************************************************
 def GetClipImg():
+    from SysCtrl import CheckClipBoad_Img
     from PIL import ImageGrab, Image
     if CheckClipBoad_Img():
         resultImg = ImageGrab.grabclipboard()

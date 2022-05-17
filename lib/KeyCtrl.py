@@ -22,6 +22,13 @@ import keyboard
 #         return False
 
 
+
+# *****************************************************************
+def CheckPress_CS(key_):
+    keys = ["shift", "ctrl", key_]
+    return True if keyboard.is_pressed(keys[2]) and keyboard.is_pressed(keys[0]) and keyboard.is_pressed(keys[1]) else False
+
+
 # *****************************************************************
 def Loop_CheckPress_CS(key_, time_out_sec = 0):
     import SysCtrl as sCtrl

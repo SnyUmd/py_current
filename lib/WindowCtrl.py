@@ -123,8 +123,8 @@ def MsgBox_err( title_, mess_):
     from tkinter import messagebox
     win_ = SetWindow(0, 0, 10, 10)
     messagebox.showerror(title=title_, message=mess_)
-    win_.withdraw()#ウインドウを非表示
-    # win_.destroy()
+    # win_.withdraw()#ウインドウを非表示
+    win_.destroy()
     
 #*****************************************************************************
 def MsgBox_yn(title_, mess_):

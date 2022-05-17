@@ -22,4 +22,26 @@ def GetPrcsTime():
     result_time = time.process_time()#開始時間をセット
     return result_time
 
-    
+# *****************************************************************
+def CheckClipBoad_Img():
+    from PIL import ImageGrab, Image
+    # クリップボード内の情報を取得する
+    clipboard_image = ImageGrab.grabclipboard()
+    # clioboard_imageがImage.Image型の場合は保存する
+    if isinstance(clipboard_image, Image.Image):
+        return True
+    else:
+        return False
+
+# *****************************************************************
+def CheckClipBoad_Str():
+    from pyperclip import paste
+    # クリップボード内の情報を取得する
+    clipboard_Str = paste()
+    if type(clipboard_Str) == str and not clipboard_Str == "": return True
+    else: return False
+
+# *****************************************************************
+def getClipBoad_str():
+    from pyperclip import paste
+    return paste()
