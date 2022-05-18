@@ -47,6 +47,101 @@ aryMsg = ["[win] + [ctrl] + %s  =  クリップボードの画像からテキス
 #     sCtrl.TextCopyToClip(text_, True, str_message="抽出したテキストを、クリップボードにコピーしました。\n\n\n %s" % text_)
 #     # WCtrl.MsgBox_Inf(mess_=text_, title_="")
 
+
+# *******************************************************************************
+def SerchText_ClipImg():
+    print('クリップボード内のイメージよりテキストを抽出')
+    isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
+    if not isImage:#イメージでは無いとき
+        wCtrl.MsgBox_err('errer', 'not image')
+    else:#イメージだった時、イメージ内のテキストを判定
+        Img_ = iCtrl.GetClipImg()
+
+        if Img_ == "err":
+            print("err")
+            
+        else:
+            text_ = iCtrl.GetImgText_Image(Img_)
+            if not text_ == "":
+                msg_ = text_
+                sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
+            else:
+                msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
+            
+            wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
+    resetSts()
+    print('SerchText clipImg end')
+    # pressCnt = [0, 0, 0, 0]
+    # ActionSts = 0
+
+# *******************************************************************************
+def Translat_ja_to_en():
+    print('クリップボード内の英語テキストを日本語に翻訳')
+    isStr = sCtrl.CheckClipBoad_Str()#クリップボードがテキストであるか確認
+    if not isStr:#テキストでは無いとき
+        wCtrl.MsgBox_err('errer', 'not text')
+    else:#イメージだった時、翻訳を実行
+        import Translation
+        wCtrl.MsgBox_Inf('', 'Webブラウザに翻訳結果を表示します。')
+        cStr = sCtrl.getClipBoad_str()
+        Translation.GetTR(cStr)
+    print('Translat ja to en end')
+    resetSts()
+    
+
+# *******************************************************************************
+def SerchText_Window():
+    import tkinter as tk0
+                
+    # ----------------------------------------------------------------------
+    def ClickFile():
+        wCtrl.ClickFileRead(TxbFileTK,'Image file','*.jpg *.Png *.png *.ico')
+
+    # ----------------------------------------------------------------------
+    def ClickTextRead():
+        text_ = iCtrl.GetImgText_File(TxbFileTK.get())
+        sCtrl.TextCopyToClip(text_, True, str_message="抽出したテキストを、クリップボードにコピーしました。\n\n\n %s" % text_)
+        # WCtrl.MsgBox_Inf(mess_=text_, title_="")
+
+    print('選択画像内のテキストを抽出')
+    WinSts = [600, 80, 10, 10, "テキスト抽出"]
+
+    # エリア1----------------------------------------
+    LblFileSts = [10, 10, '選択ファイル']
+    TxbFileSts = [WinSts[0] - 150, 20, LblFileSts[0] + 70, LblFileSts[1], True, ""]
+    BtnFileSts = [50, 20, TxbFileSts[2] + TxbFileSts[0] + 10, TxbFileSts[3], ClickFile, "File"]
+
+    # エリア2----------------------------------------
+    BtnTextReadSts = [WinSts[0] - 50, 20, 25, LblFileSts[1] + 30, ClickTextRead, 'テキスト抽出']
+
+
+    WinTK = wCtrl.SetWindow(WinSts[0], WinSts[1], WinSts[2], WinSts[3], WinSts[4])
+    LblFileTK = wCtrl.SetLabel(LblFileSts[0], LblFileSts[1], LblFileSts[2])
+    TxbFileTK = wCtrl.SetTxbEntry(TxbFileSts[0], TxbFileSts[1], TxbFileSts[2], TxbFileSts[3], TxbFileSts[4], TxbFileSts[5])
+    BtnFileTK = wCtrl.SetBtn(BtnFileSts[0], BtnFileSts[1], BtnFileSts[2], BtnFileSts[3], BtnFileSts[4], BtnFileSts[5])
+
+    BtnTextRead = wCtrl.SetBtn(BtnTextReadSts[0], BtnTextReadSts[1], BtnTextReadSts[2], BtnTextReadSts[3], BtnTextReadSts[4], BtnTextReadSts[5])
+
+    wCtrl.WindowLoopStart(tk0)
+    print('SerchText windownd end')
+    resetSts()
+    
+# *******************************************************************************
+def displayHelp():
+    global aryMsg
+    # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
+    # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
+    msg_str = ""
+    loop_num = len(aryMsg)
+    
+    for i in range(loop_num):
+        msg_str += aryMsg[i]
+        msg_str += "\r\n" if not i >= loop_num else ""
+        
+    print(msg_str)
+    wCtrl.MsgBox_Inf('help', msg_str)
+    resetSts()
+    
 # *******************************************************************************
 def resetSts():
     global pressCnt
@@ -57,21 +152,8 @@ def resetSts():
     ActionSts = 0
     # print(pressCnt)
 
-# *******************************************************************************
-def displayHelp():
-    global aryMsg
-    # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
-    # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
+
     
-    msg_str = ""
-    loop_num = len(aryMsg)
-    
-    for i in range(loop_num):
-        msg_str += aryMsg[i]
-        msg_str += "\r\n" if not i >= loop_num else ""
-        
-    print(msg_str)
-    wCtrl.MsgBox_Inf('help', msg_str)
 # *******************************************************************************
 def quit_system():
     global Loop_Main
@@ -106,7 +188,7 @@ def thread_task_icon():
     #-----------------------
     # メニュー
     #-----------------------
-    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'Quit': lambda: quit_system()}
+    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'help': lambda: displayHelp(), 'Quit': lambda: quit_system()}
         
     items = []
     for option, callback in options_map.items():
@@ -131,8 +213,9 @@ def thread_main():
     global sys_sts
     global aryKeys
 
-    print('main start')
-    displayHelp()
+    print('system start')
+    # displayHelp()
+    ActionSts = 4#ヘルプ画面表示からスタート
     # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
     # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
 
@@ -181,93 +264,22 @@ def thread_main():
             # =================================================================
             # クリップボードのイメージからテキストを抽出
             elif ActionSts == 1:
-                isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
-                print(isImage)
-                if not isImage:#イメージでは無いとき
-                    wCtrl.MsgBox_err('errer', 'not image')
-                else:#イメージだった時、イメージ内のテキストを判定
-                    Img_ = iCtrl.GetClipImg()
-
-                    if Img_ == "err":
-                        print("err")
-                        
-                    else:
-                        text_ = iCtrl.GetImgText_Image(Img_)
-                        if not text_ == "":
-                            msg_ = text_
-                            sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
-                        else:
-                            msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
-                        
-                        wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
-                print('1 End')
-                resetSts()
-                # pressCnt = [0, 0, 0, 0]
-                # ActionSts = 0
-
+                SerchText_ClipImg()
 
             # =================================================================
             # クリップボードの英語を日本語に翻訳
             elif ActionSts == 2:
-                isStr = sCtrl.CheckClipBoad_Str()#クリップボードがテキストであるか確認
-                print(isStr)
-                if not isStr:#テキストでは無いとき
-                    wCtrl.MsgBox_err('errer', 'not text')
-                else:#イメージだった時、翻訳を実行
-                    import Translation
-                    wCtrl.MsgBox_Inf('', 'Webブラウザに翻訳結果を表示します。')
-                    cStr = sCtrl.getClipBoad_str()
-                    Translation.GetTR(cStr)
-                print('2 End')
-                resetSts()
-                # pressCnt = [0, 0, 0, 0]
-                # ActionSts = 0
+                Translat_ja_to_en()
             
             # =================================================================
             # 選択画像内のテキストを抽出（ウインドウ）
             elif ActionSts == 3:
-                import tkinter as tk0
-                
-                # ----------------------------------------------------------------------
-                def ClickFile():
-                    wCtrl.ClickFileRead(TxbFileTK,'Image file','*.jpg *.Png *.png *.ico')
-
-                # ----------------------------------------------------------------------
-                def ClickTextRead():
-                    text_ = iCtrl.GetImgText_File(TxbFileTK.get())
-                    sCtrl.TextCopyToClip(text_, True, str_message="抽出したテキストを、クリップボードにコピーしました。\n\n\n %s" % text_)
-                    # WCtrl.MsgBox_Inf(mess_=text_, title_="")
-
-
-                WinSts = [600, 80, 10, 10, "テキスト抽出"]
-
-                # エリア1----------------------------------------
-                LblFileSts = [10, 10, '選択ファイル']
-                TxbFileSts = [WinSts[0] - 150, 20, LblFileSts[0] + 70, LblFileSts[1], True, ""]
-                BtnFileSts = [50, 20, TxbFileSts[2] + TxbFileSts[0] + 10, TxbFileSts[3], ClickFile, "File"]
-
-                # エリア2----------------------------------------
-                BtnTextReadSts = [WinSts[0] - 50, 20, 25, LblFileSts[1] + 30, ClickTextRead, 'テキスト抽出']
-
-
-                WinTK = wCtrl.SetWindow(WinSts[0], WinSts[1], WinSts[2], WinSts[3], WinSts[4])
-                LblFileTK = wCtrl.SetLabel(LblFileSts[0], LblFileSts[1], LblFileSts[2])
-                TxbFileTK = wCtrl.SetTxbEntry(TxbFileSts[0], TxbFileSts[1], TxbFileSts[2], TxbFileSts[3], TxbFileSts[4], TxbFileSts[5])
-                BtnFileTK = wCtrl.SetBtn(BtnFileSts[0], BtnFileSts[1], BtnFileSts[2], BtnFileSts[3], BtnFileSts[4], BtnFileSts[5])
-
-                BtnTextRead = wCtrl.SetBtn(BtnTextReadSts[0], BtnTextReadSts[1], BtnTextReadSts[2], BtnTextReadSts[3], BtnTextReadSts[4], BtnTextReadSts[5])
-
-                wCtrl.WindowLoopStart(tk0)
-                print('3 End')
-                resetSts()
-                # pressCnt = [0, 0, 0, 0]
-                # ActionSts = 0
+                SerchText_Window()
 
             elif ActionSts == 4:
                 displayHelp()
                 # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
-                print('4 End')
-                resetSts()
+
                 # pressCnt = [0, 0, 0, 0]
                 # ActionSts = 0
                 
