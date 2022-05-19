@@ -3,7 +3,7 @@
 
 def GetTR(text_:str, source_Language:str = 'en', target_Language:str = 'ja'):
     #モジュールの読み込み
-    import webbrowser
+    from webbrowser import open
 
     url = "https://script.google.com/macros/s/AKfycbwZKnRrH2tF4o147NLkId4xilXCabm4lS5o-nbo8QvAW31jsHZ9/exec"
     url += "?text=%s" % text_
@@ -12,7 +12,7 @@ def GetTR(text_:str, source_Language:str = 'en', target_Language:str = 'ja'):
     
     
     #指定したURLのサイトをブラウザで表示
-    webbrowser.open(url)
+    open(url)
 
 
 # GetTR('Hello', 'en', 'ja')

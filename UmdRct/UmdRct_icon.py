@@ -2,6 +2,7 @@
 # 参考
 # https://blog2.k05.biz/2021/09/python-pystray.html
 
+from logging import exception
 import threading
 import pystray
 from pystray import Icon, Menu, MenuItem
@@ -14,6 +15,8 @@ import WindowCtrl as wCtrl
 import SysCtrl as sCtrl
 import KeyCtrl as kCtrl
 
+global soft_version
+
 global ActionSts
 global pressCnt
 global Loop_Main
@@ -24,6 +27,8 @@ global sys_sts
 global aryKeys
 global aryMsg
 # global Loop_icon
+
+soft_version = 'software version 1.0.1'
 
 ActionSts = 0
 pressCnt = [0, 0, 0, 0, 0]
@@ -50,25 +55,31 @@ aryMsg = ["[win] + [ctrl] + %s  =  クリップボードの画像からテキス
 
 # *******************************************************************************
 def SerchText_ClipImg():
-    print('クリップボード内のイメージよりテキストを抽出')
-    isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
-    if not isImage:#イメージでは無いとき
-        wCtrl.MsgBox_err('errer', 'not image')
-    else:#イメージだった時、イメージ内のテキストを判定
-        Img_ = iCtrl.GetClipImg()
+    try:
+        print('クリップボード内のイメージよりテキストを抽出')
+        isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
+        if not isImage:#イメージでは無いとき
+            wCtrl.MsgBox_err('errer', 'not image')
+        else:#イメージだった時、イメージ内のテキストを判定
+            Img_ = iCtrl.GetClipImg()
 
-        if Img_ == "err":
-            print("err")
-            
-        else:
-            text_ = iCtrl.GetImgText_Image(Img_)
-            if not text_ == "":
-                msg_ = text_
-                sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
+            if Img_ == "err":
+                print("err")
+                
             else:
-                msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
-            
-            wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
+                text_ = iCtrl.GetImgText_Image(Img_)
+                if not text_ == "":
+                    msg_ = text_
+                    sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
+                else:
+                    msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
+                
+                wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
+    except:
+        print('Error　SerchText_ClipImg')
+        print('Error　クリップボードイメージ テキスト抽出')
+        wCtrl.MsgBox_err('Error', 'クリップボードイメージ内のテキスト抽出に失敗しました。')
+
     resetSts()
     print('SerchText clipImg end')
     # pressCnt = [0, 0, 0, 0]
@@ -76,15 +87,21 @@ def SerchText_ClipImg():
 
 # *******************************************************************************
 def Translat_ja_to_en():
-    print('クリップボード内の英語テキストを日本語に翻訳')
-    isStr = sCtrl.CheckClipBoad_Str()#クリップボードがテキストであるか確認
-    if not isStr:#テキストでは無いとき
-        wCtrl.MsgBox_err('errer', 'not text')
-    else:#イメージだった時、翻訳を実行
-        import Translation
-        wCtrl.MsgBox_Inf('', 'Webブラウザに翻訳結果を表示します。')
-        cStr = sCtrl.getClipBoad_str()
-        Translation.GetTR(cStr)
+    try:
+        print('クリップボード内の英語テキストを日本語に翻訳')
+        isStr = sCtrl.CheckClipBoad_Str()#クリップボードがテキストであるか確認
+        if not isStr:#テキストでは無いとき
+            wCtrl.MsgBox_err('errer', 'not text')
+        else:#イメージだった時、翻訳を実行
+            import Translation
+            wCtrl.MsgBox_Inf('', 'Webブラウザに翻訳結果を表示します。')
+            cStr = sCtrl.getClipBoad_str()
+            Translation.GetTR(cStr)
+    except:
+        print('Error　Translat_ja_to_en')
+        print('Error　翻訳')
+        wCtrl.MsgBox_err('Error', '翻訳に失敗しました。')
+        
     print('Translat ja to en end')
     resetSts()
     
@@ -121,14 +138,21 @@ def SerchText_Window():
     BtnFileTK = wCtrl.SetBtn(BtnFileSts[0], BtnFileSts[1], BtnFileSts[2], BtnFileSts[3], BtnFileSts[4], BtnFileSts[5])
 
     BtnTextRead = wCtrl.SetBtn(BtnTextReadSts[0], BtnTextReadSts[1], BtnTextReadSts[2], BtnTextReadSts[3], BtnTextReadSts[4], BtnTextReadSts[5])
+    try:
+        wCtrl.WindowLoopStart(tk0)
 
-    wCtrl.WindowLoopStart(tk0)
+    
+    except:
+        print('Error　SerchText_Window')
+        print('Error　選択イメージ テキスト抽出')
+        wCtrl.MsgBox_err('Error', '選択イメージ内のテキスト抽出に失敗しました。')
     print('SerchText windownd end')
     resetSts()
     
 # *******************************************************************************
-def displayHelp():
+def displayHelp(bl_msgbox):
     global aryMsg
+    global soft_version
     # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
     # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3], aryMsg[4]))
     msg_str = ""
@@ -137,9 +161,12 @@ def displayHelp():
     for i in range(loop_num):
         msg_str += aryMsg[i]
         msg_str += "\r\n" if not i >= loop_num else ""
+    
+    msg_str += "\r\n\r\n%s" % soft_version
         
     print(msg_str)
-    wCtrl.MsgBox_Inf('help', msg_str)
+    if bl_msgbox:
+        wCtrl.MsgBox_Inf('help', msg_str)
     resetSts()
     
 # *******************************************************************************
@@ -188,7 +215,7 @@ def thread_task_icon():
     #-----------------------
     # メニュー
     #-----------------------
-    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'help': lambda: displayHelp(), 'Quit': lambda: quit_system()}
+    options_map = {'main enable':lambda:main_enable(), 'main disable':lambda:main_disable(), 'help': lambda: displayHelp(True), 'Quit': lambda: quit_system()}
         
     items = []
     for option, callback in options_map.items():
@@ -214,8 +241,8 @@ def thread_main():
     global aryKeys
 
     print('system start')
-    # displayHelp()
-    ActionSts = 4#ヘルプ画面表示からスタート
+    displayHelp(False)
+    # ActionSts = 4#ヘルプ画面表示からスタート
     # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
     # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
 
@@ -277,7 +304,7 @@ def thread_main():
                 SerchText_Window()
 
             elif ActionSts == 4:
-                displayHelp()
+                displayHelp(True)
                 # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
 
                 # pressCnt = [0, 0, 0, 0]
