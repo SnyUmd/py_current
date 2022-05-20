@@ -1,6 +1,9 @@
 # from sklearn import tree
-# 参考
+# タスクトレイアイコンについての参考
 # https://blog2.k05.biz/2021/09/python-pystray.html
+
+#翻訳Webアプリ作成手順
+# https://qiita.com/satto_sann/items/be4177360a0bc3691fdf
 
 from logging import exception
 import threading
