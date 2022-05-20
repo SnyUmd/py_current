@@ -28,13 +28,13 @@ global aryKeys
 global aryMsg
 # global Loop_icon
 
-soft_version = 'software version 1.0.1'
+soft_version = 'software version 1.1.0'
 
 ActionSts = 0
-pressCnt = [0, 0, 0, 0, 0]
+pressCnt = [0, 0, 0, 0, 0, 0]
 Loop_Main = True
 sys_sts = True
-aryKeys = ["]", "\\", "[", "h", "esc"]
+aryKeys = ["/", "\\", ":", "h", "esc", "]"]
 
 aryMsg = ["[win] + [ctrl] + %s  =  クリップボードの画像からテキストを抽出" % aryKeys[0],
            "[win] + [ctrl] + %s  =  クリップボードの英語を翻訳" % aryKeys[1],
@@ -175,11 +175,9 @@ def resetSts():
     global ActionSts
     for i in range(len(pressCnt)):
         pressCnt[i] = 0
-        
+
     ActionSts = 0
     # print(pressCnt)
-
-
     
 # *******************************************************************************
 def quit_system():
@@ -194,6 +192,42 @@ def quit_system():
     icon_.stop()
     print('system quit')
     
+
+
+# *******************************************************************************
+def Translat_en_to_ja_Win():
+    import tkinter as TK1
+    global TxbMultiJaSts
+
+    #----------------------------------------
+    def ClickRun():
+        import Translation
+
+        ja_txt = wCtrl.GetValue_ScrolledText(TxbMultiJa_TK)
+        Translation.GetTR(ja_txt, 'ja', 'en')
+        # wCtrl.DelValue_ScrolledText(TxbMultiEn_TK)
+        # wCtrl.AddValue_ScrolledText(TxbMultiEn_TK, en_txt)
+        print('日本語→英語　実行')
+        # print(en_txt)
+
+    print('英語変換ツール起動')
+    WinSts = [600, 130, 10, 10, "テキスト抽出"]
+    LblFileSts = [10, 10, '日本語']
+    TxbMultiJaSts = [WinSts[0] - 20, 50, LblFileSts[0], LblFileSts[1] + 20, True, '']
+    BtnRunSts = [WinSts[0] - 20, 30, TxbMultiJaSts[2], TxbMultiJaSts[3] + TxbMultiJaSts[1] + 10, ClickRun, "日本語→英語"]
+    # TxbMultiEnSts = [WinSts[0] - 20, 50, TxbMultiJaSts[2], BtnRunSts[3] + BtnRunSts[1] + 10, False, '']
+    
+    Win_TK = wCtrl.SetWindow(WinSts[0], WinSts[1], WinSts[2], WinSts[3], WinSts[4])
+    LblFile_TK = wCtrl.SetLabel(LblFileSts[0], LblFileSts[1], LblFileSts[2])
+    TxbMultiJa_TK = wCtrl.SetTxbMultiLine(TxbMultiJaSts[0], TxbMultiJaSts[1], TxbMultiJaSts[2], TxbMultiJaSts[3], TxbMultiJaSts[4], TxbMultiJaSts[5])
+    BtnRun_TK = wCtrl.SetBtn(BtnRunSts[0], BtnRunSts[1], BtnRunSts[2], BtnRunSts[3], BtnRunSts[4], BtnRunSts[5])
+    # TxbMultiEn_TK = wCtrl.SetTxbMultiLine(TxbMultiEnSts[0], TxbMultiEnSts[1], TxbMultiEnSts[2], TxbMultiEnSts[3], TxbMultiEnSts[4], TxbMultiEnSts[5])
+
+    wCtrl.WindowLoopStart(TK1)
+    print('日本語→英語　Quit')
+    resetSts()
+
+
 # *******************************************************************************
 def main_enable():
     global Loop_Main
@@ -245,7 +279,7 @@ def thread_main():
     # ActionSts = 4#ヘルプ画面表示からスタート
     # print("%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
     # wCtrl.MsgBox_Inf('help', "%s\r\n%s\r\n%s\r\n%s" % (aryMsg[0], aryMsg[1], aryMsg[2], aryMsg[3]))
-
+    # ActionSts = 6
     while sys_sts:
          if Loop_Main:   
             # =================================================================
@@ -287,6 +321,14 @@ def thread_main():
                         if ActionSts == 0: ActionSts = 5
                 else: 
                     pressCnt[4] = 0
+                
+                # 日本語→英語変換ツールの起動  
+                if kCtrl.CheckPress_CS(aryKeys[5]):
+                    pressCnt[5] += 1
+                    if pressCnt[5] > 150:
+                        if ActionSts == 0: ActionSts = 6
+                else: 
+                    pressCnt[5] = 0
 
             # =================================================================
             # クリップボードのイメージからテキストを抽出
@@ -315,6 +357,11 @@ def thread_main():
             elif ActionSts == 5:
                 resetSts()
                 quit_system()
+            
+            # =================================================================
+            # 日本語→英語翻訳ツール
+            elif ActionSts == 6:
+                Translat_en_to_ja_Win()
                 
 # ***********************************************************************************************************************
 # ***********************************************************************************************************************

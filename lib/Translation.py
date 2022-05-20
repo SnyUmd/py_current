@@ -10,7 +10,6 @@ def GetTR(text_:str, source_Language:str = 'en', target_Language:str = 'ja'):
     url += "&source=%s"  % source_Language
     url += "&target=%s"  % target_Language
     
-    
     #指定したURLのサイトをブラウザで表示
     open(url)
 
