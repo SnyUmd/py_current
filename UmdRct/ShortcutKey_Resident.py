@@ -24,8 +24,6 @@
 
 from logging import exception
 import threading
-
-from WindowCtrl import MsgBox_Inf
 from BrowserCtrl import accessWeb
 import pystray
 from pystray import Icon, Menu, MenuItem
@@ -79,35 +77,35 @@ aryMsg = ["[win] + [ctrl] + %s  =  クリップボードの画像からテキス
 
 # *******************************************************************************
 def SerchText_ClipImg():
-    # try:
+    try:
         # raise ValueError("error!")
-    print('クリップボード内のイメージよりテキストを抽出')
-    isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
-    if not isImage:#イメージでは無いとき
-        wCtrl.MsgBox_err('errer', 'not image')
-    else:#イメージだった時、イメージ内のテキストを判定
-        Img_ = iCtrl.GetClipImg()
-        if Img_ == "err":
-            print("err")
-            
-        else:
-            text_ = iCtrl.GetImgText_Image(Img_)
-            wCtrl.MsgBox_Inf('ok', 'ok')
-            if not text_ == "":
-                msg_ = text_
-                sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
+        print('クリップボード内のイメージよりテキストを抽出')
+        isImage = sCtrl.CheckClipBoad_Img()#クリップボードがイメージであるか判定
+        if not isImage:#イメージでは無いとき
+            wCtrl.MsgBox_err('errer', 'not image')
+        else:#イメージだった時、イメージ内のテキストを判定
+            Img_ = iCtrl.GetClipImg()
+
+            if Img_ == "err":
+                print("err")
+                
             else:
-                msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
-            
-            wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
-    # except:
-        # print('Error　SerchText_ClipImg')
-        # print('Error　クリップボードイメージ テキスト抽出')
-        # wCtrl.MsgBox_err('Error', 'クリップボードイメージ内のテキスト抽出に失敗しました。')
-        # if not wCtrl.MsgBox_yn('確認', 'OCRをインストールしていますか？'):
-        #     import BrowserCtrl
-        #     accessWeb('https://github.com/UB-Mannheim/tesseract/wiki')
-        #     wCtrl.MsgBox_Inf('操作説明', 'tesseract-ocr-w32-setup-v5.1.0.20220510.exe　をダウンロード\r\n\r\nインストール時の注意事項\r\n  　■Additional script data(download)を設定\r\n  　　「Japanese script」と「Japanese vertical script」にチェック\r\n  　\r\n  　■Additional language data(download)を設定\r\n  　　「Japanese」と「Japanese(Vertical)」にチェック')
+                text_ = iCtrl.GetImgText_Image(Img_)
+                if not text_ == "":
+                    msg_ = text_
+                    sCtrl.TextCopyToClip(text_, True)#クリップボードに保存
+                else:
+                    msg_ = "イメージの中に、テキスト判定できるものがありませんでした"
+                
+                wCtrl.MsgBox_Inf(mess_=msg_, title_="")#メッセージボックス表示
+    except:
+        print('Error　SerchText_ClipImg')
+        print('Error　クリップボードイメージ テキスト抽出')
+        wCtrl.MsgBox_err('Error', 'クリップボードイメージ内のテキスト抽出に失敗しました。')
+        if not wCtrl.MsgBox_yn('確認', 'OCRをインストールしていますか？'):
+            import BrowserCtrl
+            accessWeb('https://github.com/UB-Mannheim/tesseract/wiki')
+            wCtrl.MsgBox_Inf('操作説明', 'tesseract-ocr-w32-setup-v5.1.0.20220510.exe　をダウンロード\r\n\r\nインストール時の注意事項\r\n  　■Additional script data(download)を設定\r\n  　　「Japanese script」と「Japanese vertical script」にチェック\r\n  　\r\n  　■Additional language data(download)を設定\r\n  　　「Japanese」と「Japanese(Vertical)」にチェック')
 
     resetSts()
     print('SerchText clipImg end')
@@ -240,8 +238,8 @@ def Translat_en_to_ja_Win():
         # print(en_txt)
 
     print('英語変換ツール起動')
-    WinSts = [600, 130, 10, 10, "テキスト抽出"]
-    LblFileSts = [10, 10, '日本語']
+    WinSts = [600, 130, 10, 10, "英語変換ツール"]
+    LblFileSts = [10, 10, '日本語を記入してください']
     TxbMultiJaSts = [WinSts[0] - 20, 50, LblFileSts[0], LblFileSts[1] + 20, True, '']
     BtnRunSts = [WinSts[0] - 20, 30, TxbMultiJaSts[2], TxbMultiJaSts[3] + TxbMultiJaSts[1] + 10, ClickRun, "日本語→英語"]
     # TxbMultiEnSts = [WinSts[0] - 20, 50, TxbMultiJaSts[2], BtnRunSts[3] + BtnRunSts[1] + 10, False, '']
@@ -272,6 +270,8 @@ def main_disable():
     print('main disable')
 
 # *******************************************************************************
+# タスクトレイにアイコンを表示するスレッド
+# *******************************************************************************
 def thread_task_icon():
     global t_icon
     global icon_
@@ -296,6 +296,8 @@ def thread_task_icon():
 
 
 # *******************************************************************************
+# メインスレッド
+# *******************************************************************************
 def thread_main():
     global pressCnt
     global ActionSts
@@ -311,6 +313,8 @@ def thread_main():
     # ActionSts = 6
     while sys_sts:
          if Loop_Main:   
+            # =================================================================
+            # ショートカット監視部
             # =================================================================
             if ActionSts == 0:
                 # クリップボードの画像からテキストを抽出
@@ -361,16 +365,19 @@ def thread_main():
 
             # =================================================================
             # クリップボードのイメージからテキストを抽出
+            # =================================================================
             elif ActionSts == 1:
                 SerchText_ClipImg()
 
             # =================================================================
             # クリップボードの英語を日本語に翻訳
+            # =================================================================
             elif ActionSts == 2:
                 Translat_ja_to_en()
             
             # =================================================================
             # 選択画像内のテキストを抽出（ウインドウ）
+            # =================================================================
             elif ActionSts == 3:
                 SerchText_Window()
 
@@ -383,12 +390,14 @@ def thread_main():
                 
             # =================================================================
             # 終了
+            # =================================================================
             elif ActionSts == 5:
                 resetSts()
                 quit_system()
             
             # =================================================================
             # 日本語→英語翻訳ツール
+            # =================================================================
             elif ActionSts == 6:
                 Translat_en_to_ja_Win()
                 

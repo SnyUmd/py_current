@@ -7,8 +7,8 @@
 def AddPath(str_path):
     import os
     
-    path_str = os.environ['PATH']
-    # print(path_str.find(str_path))
+    path_str = os.environ['PATH']    
+    print(path_str.find(str_path))
     
     if path_str.find(str_path) >= 0:#※エラー回避　既にpathが存在する場合は、追加をキャンセル
         print('add path cancel')
