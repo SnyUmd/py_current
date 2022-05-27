@@ -3,19 +3,18 @@
 
 # ********************************************************************
 #インストールしたTesseract-OCRのパスを環境変数「PATH」へ追記する。
-#OS自体に設定してあれば以下の2行は不要
 def AddPath(str_path):
     import os
     
-    path_str = os.environ['PATH']    
-    print(path_str.find(str_path))
+    # path_str = os.environ['PATH']    
+    # print(path_str.find(str_path))
     
-    if path_str.find(str_path) >= 0:#※エラー回避　既にpathが存在する場合は、追加をキャンセル
-        print('add path cancel')
+    if os.environ['PATH'].find(str_path) >= 0:#※エラー回避　既にpathが存在する場合は、追加をキャンセル
+        # print('add path cancel')
         return
     else:
-        os.environ['PATH'] = os.environ['PATH'] + str_path
-    print('add path')
+        os.environ['PATH'] = os.environ['PATH'] + ';' + str_path
+        # print('add path')
 
 
 # ********************************************************************
